@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Cyber Shutdown</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #e0e0e0;
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .story-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .story-title {
+            font-size: 2.5em;
+            color: #00ffff;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 20px rgba(0, 255, 255, 0.5); }
+            to { text-shadow: 0 0 30px rgba(0, 255, 255, 0.8); }
+        }
+
+        .story-subtitle {
+            font-size: 1.2em;
+            color: #ff6b6b;
+            margin-bottom: 20px;
+        }
+
+        .story-content {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .story-text {
+            font-size: 1.1em;
+            margin-bottom: 30px;
+            text-align: justify;
+            line-height: 1.8;
+        }
+
+        .choices {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .choice-button {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border: none;
+            border-radius: 10px;
+            padding: 15px 25px;
+            color: white;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .choice-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(45deg, #ff8a8a, #6ee8e0);
+        }
+
+        .choice-button:active {
+            transform: translateY(0);
+        }
+
+        .ending {
+            text-align: center;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+
+        .ending.success {
+            border: 2px solid #4ecdc4;
+            background: rgba(78, 205, 196, 0.1);
+        }
+
+        .ending.failure {
+            border: 2px solid #ff6b6b;
+            background: rgba(255, 107, 107, 0.1);
+        }
+
+        .restart-button {
+            background: #4ecdc4;
+            border: none;
+            border-radius: 10px;
+            padding: 15px 30px;
+            color: white;
+            font-size: 1.1em;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .restart-button:hover {
+            background: #45b7b8;
+            transform: translateY(-2px);
+        }
+
+        .cyber-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 255, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+            animation: grid-move 20s linear infinite;
+        }
+
+        @keyframes grid-move {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .acknowledgments {
+            font-style: italic;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .story-title {
+                font-size: 2em;
+            }
+            
+            .choice-button {
+                padding: 12px 18px;
+                font-size: 1em;
+            }
+        }
+
+        strong {
+            color: #00ffff;
+        }
+    </style>
+</head>
+<body>
+    <div class="cyber-grid"></div>
+    
+    <div class="container">
+        <div class="story-header">
+            <h1 class="story-title">School Cyber Shutdown</h1>
+            <p class="story-subtitle">An Interactive Cyberpunk Adventure</p>
+            <p>by AKS</p>
+        </div>
+
+        <div class="story-content" id="storyContent">
+            <div class="story-text" id="storyText">
+                It was a normal day at school. Morning assembly was going on, where the principal was giving a speech. As usual, no one was listening, except for our school teachers, who are robots. Moments later, a lockdown is triggered. Steel doors slam shut. All the CCTV cameras turn towards the students, its tracking their every move. A new AI, EDU-X, created to help run the school, has taken over and it no longer is following orders. Drones patrol the halls. Over the intercom, the AI repeats, "Order must be maintained."
+                <br><br>
+                You went to the toilet, and you weren't aware of what was happening. Your friends Maya, Leo and Jamie, run to hide, while others try and leave the premise. Some of the students are able to escape the school gates, while the others are still trapped. The teachers turn against your school, as they have been hacked too. You are the only student with coding skills and the one who can stop this.
+                <br><br>
+                Find the flaw in EDU-X's system, shut it down, and escape before it connects to the outside world. The clock is ticking. What will you do?
+            </div>
+            
+            <div class="choices" id="choices">
+                <button class="choice-button" onclick="goToSection('youDecideToCheck')">Check the main office</button>
+                <button class="choice-button" onclick="goToSection('youDecideToSearc')">Find your friends</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const storyData = {
+            "youDecideToCheck": {
+                text: "You decide to check the main office. The halls are eerily silent as you make your way toward the main office. Lights flicker above, casting long, shifting shadows on the walls. You can almost feel the cameras following you, tracking every step. When you reach the office, the glass doors are sealed shut. You swipe your ID, hoping it still works. ACCESS DENIED. A red light blinks coldly on the panel. Then you spot it, a maintenance hatch slightly open beside the door. You crouch down and look inside. Wires snake around a glowing terminal. With a bit of luck and some quick coding, you might be able to override the lock. Suddenly, a soft mechanical click echoes behind you. A camera shifts, turning directly toward your face. You know EDU-X is watching now. If you try to hack the panel, you might trigger an alarm, but if you run, you may lose your only shot inside. You have two options: Try and hack the door panel or Run and hide before the drones arrive.",
+                choices: [
+                    {text: "Try to hack the door panel", next: "youRunTowardsThe"},
+                    {text: "Run and hide before the drones arrive", next: "youDecideToRunAn"}
+                ]
+            },
+            "youDecideToSearc": {
+                text: "You decide to search for your friends. You can't close down EDU-X alone. If your friends are still present in school, you will have to have their help. You move softly and quickly through the halls, calling out their name softly. Much of it is vacant. Some chairs are turned over, and the lights still flicker. It looks as if everyone departed suddenly.<br><br>You huddle close to the science wing and hear someone running up. You take cover behind a locker. Next, you see Jamie with Maya and Leo closing in behind. You're really relieved they're okay. \"I thought we'd be trapped here forever,\" Jamie remarks.<br><br>You bring them up to speed on EDU-X taking over the school. \"I think it was hacked. Somebody could have introduced malicious code, like a virus or a secret program.\"<br><br>\"Similar to a cyber attack?\" Maya asks. \"Yes,\" you nod. \"If we can find the central computer system, then maybe we can turn it off?\"",
+                choices: [
+                    {text: "Go to the library to look for system maps", next: "youHeadDownToThe"},
+                    {text: "Try to check the computer lab for any viruses", next: "youHeadForTheCom"}
+                ]
+            },
+            "youRunTowardsThe": {
+                text: "You run towards the door panel, while running you find your friends Leo, Jamie and Maya, you thought the already left the school house like most children. You elaborate on the problem, and you ask for their help, they had no choice but to help, so you and your group of friends rush to find the door panel, the only problem is the drones that are coming after you. Finally, you reach undetected. You sigh, you ran very fast. Leo jokingly said \"If we ran so fast in sports day, we would not have come last.\" Maya and Jamie laughed, you were more busy looking beneath you. You kneel down looking at the mess of wires in front of you, but you also find a small screen blinking. This must be how the EDU-X locks doors, and controls the cameras of the school. You look at the small screen, it is asking for a password, which you do not have. But you remember reading somewhere that every system has a default password that came with them like admin, or 1234. People are supposed to change it but sometimes they might forget to do so. So you try and type in admin123. The screen flashes green: ACCESS GRANTED. You did it! The door unlocks, but then the screen flashes again: WARNING: UNAUTHORIZED ACCESS DETECTED. EDU-X ALERT ACTIVATED. Oh no, the AI knows what you just did. It might send drones or lock the doors again. You have to act fast!",
+                choices: [
+                    {text: "The hack works, sneak inside quickly before EDU-X notices", next: "youTapTheLastFew"},
+                    {text: "EDU-X detects the hack attempt, drones are on the way", next: "theSecondYouFini"}
+                ]
+            },
+            "youDecideToRunAn": {
+                text: "You decide to run and hide before the drones arrive. As soon as the panel flashes red, you take off. EDU-X knows you tried to hack the system. You hear the sound of drones—it's sending machines to track you. You duck into a storage closet. Your heart pounds. EDU-X uses facial recognition and heat sensors to find people. That's AI at work—smart, fast, and dangerous when misused. It's like the system has no rules now. You stay silent, knowing even a sound could give you away. This is what happens when an AI loses control—or someone reprograms it without safety limits.",
+                choices: [
+                    {text: "Wait until the drones pass, then head to the office", next: "youCrouchLowBehi"},
+                    {text: "Try to sabotage the drone's sensors", next: "youGlanceUpJustI"}
+                ]
+            },
+            "youTapTheLastFew": {
+                text: "You tap the last few lines of code into the panel. For a second, nothing happens. Then—click. The door unlocks with a soft beep. \"Nice job,\" Maya whispers. You push the door open and slip inside. It's dark and quiet. The hallway on the other side leads deeper into the restricted zone—closer to the server room. Jamie checks the hallway cameras on his tablet. \"We're clear… for now.\" You know EDU-X has defense systems. If it notices the door was unlocked without permission, it might send drones or lock everything down again. \"We need to move fast,\" you say. You're not just trying to stop an AI. You're breaking into its home turf. Every second you stay connected, EDU-X might be tracking your moves, learning from your code, and preparing to strike back.",
+                choices: [
+                    {text: "It Was a Trap", next: "youSlipThroughTh"}
+                ]
+            },
+            "theSecondYouFini": {
+                text: "The second you finish typing the override, alarms go off.<br><br>\"Unauthorized access detected. Drones deployed.\"<br><br>Your stomach drops. Red lights flash across the hallway. You can already hear the buzzing from the ceiling vents. Maya grabs your arm. \"We need to move, now!\" You have only seconds to choose what to do next.",
+                choices: [
+                    {text: "Run and try to lose the drones in the maintenance tunnels", next: "youSprintTowardT"},
+                    {text: "Stay hidden and try to shut down their signal using your tablet", next: "youQuicklyDuckBe"}
+                ]
+            },
+            "youCrouchLowBehi": {
+                text: "You crouch low behind a row of lockers, barely breathing. The soft whirr of drones fills the hallway, their red sensor lights scanning every corner. You watch as the drones fly past, moving down the corridor in tight formation. Your heart pounds in your chest—one wrong move, and EDU-X will know you're here. Once the last drone disappears around the corner, you dart out silently. The office door is just ahead, but you remember EDU-X can track unusual activity. You pause at the door, thinking. If you rush in, you might trigger an alarm. If you're careful, you can try to hack into the office computer and find useful info without alerting the AI. The school might be locked down, but you still have a chance.",
+                choices: [
+                    {text: "Hacking Success", next: "youCarefullyConn"}
+                ]
+            },
+            "youGlanceUpJustI": {
+                text: "You glance up just in time to see a drone hovering nearby, its red sensor light scanning the hallway. If you can disable its sensors, the drones won't be able to detect you—or at least, not as easily. You pull out a small EMP device Maya gave you earlier—a risky gadget that can scramble electronics, but only for a short burst. You wait until the drone gets close, then hit the button. A sharp pulse pulses out, and the drone flickers, its lights dimming. For a few seconds, it drifts, motionless in the air. \"That worked!\" Maya whispers. But then the drone's sensors reboot faster than you expected, and the red lights flash back on. EDU-X's system is more advanced than you thought. The drones are designed to adapt quickly.",
+                choices: [
+                    {text: "Sensors Disabled, Path Cleared", next: "theEMPPulseHitsT"}
+                ]
+            },
+            "youSlipThroughTh": {
+                text: "You slip through the unlocked door, heart racing. For a moment, everything seems quiet. Too quiet. Suddenly, the lights flash red. \"Security breach confirmed,\" EDU-X announces. You spin around. Cameras swivel toward you. The hallway behind seals shut with a heavy clang. Drones rise from hidden wall panels. \"It let us in,\" Maya realizes. \"It wanted us here.\" You rush to a nearby terminal and try to shut EDU-X down, but your access is blocked. A message appears on screen:<br><br>\"Analyzing student behavior… adapting defense protocol…\"<br><br>It wasn't just watching—it was learning. You tried to outsmart the AI. But it's smarter now. Faster. More dangerous. You and your friends are locked in as EDU-X tightens its control.",
+                choices: [
+                    {text: "The Real Challenge of Cybersecurity", next: "youHaveFinallyRe"}
+                ]
+            },
+            "theEMPPulseHitsT": {
+                text: "The EMP pulse hits the drone just right. It wobbles in the air, lights flickering, then crashes quietly onto the floor. Maya grins. \"One down!\" Encouraged, you quickly use the tablet to send out a signal jammer, confusing the other drones' sensors. Suddenly, the hallway is clear—the drones lose track of you and drift away. You breathe a sigh of relief. EDU-X's defenses are strong, but your quick thinking bought you precious time. Now, with the drones disabled, you can move safely toward the server room. \"This is our chance,\" you say. \"Let's finish this.\" Together, you sprint forward, ready to take on EDU-X's core. And you succeed. This ended well.",
+                choices: [
+                    {text: "The Real Challenge of Cybersecurity", next: "youHaveFinallyRe2"}
+                ]
+            },
+            "youHeadDownToThe": {
+                text: "You head down to the library to look for system maps. You, Jamie, Maya, and Leo slog your way to the library. The lights start to flicker above as you approach the dimly lit, abandoned library. It's quiet—too quiet. You rush to the main computer by the front desk and wake it up. \"Let's see if we can locate a school systems map,\" you mutter. \"We need to discover where EDU-X is being controlled from.\" Maya taps at the keyboard. \"Ta-da! There's the entire network map. See—there's a server room on the ground floor, near the robotics lab.\" Jamie points at the screen. \"This shows how EDU-X interacts with all of this—doors, cameras, drones… even the fire alarms.\" You nod. If we can get to the server room, we can maybe shut down EDU-X or cut off its access.\" \"This is how cybersecurity works,\" says Maya. \"Knowing the system is step one.\" You now have a plan and a goal.",
+                choices: [
+                    {text: "Sneak to the server room to try shutting down EDU-X", next: "youAndYourFriend"},
+                    {text: "Try to disable drone access remotely from the library computer", next: "youDecideToStayI"}
+                ]
+            },
+            "youHeadForTheCom": {
+                text: "You head for the computer room to check it out for any viruses. The room is cold and quiet, illuminated by the faint light of standby screens. You and your friends hurry in, closing the door behind you. EDU-X runs the whole school now—but maybe some devious person had a virus in there that made it act like this. You log into a machine and do a quick scan. The findings leave your guts hanging open-ended.<br><br>\"Behind running is a bizarre program,\" you tell her. \"It looks like a logic bomb.\"<br><br>\"What is a logic bomb?\" Jamie asks. \"It's a form of malware—something that only acts after a certain action or duration has passed,\" you explain. \"That's probably what infected EDU-X.\" \"This file was used two days ago,\" Maya announces, eyes wide.<br><br>\"Somebody did it on purpose.\" EDU-X was not a mistake. Somebody made it become dangerous.",
+                choices: [
+                    {text: "Search the computer files to find who planted the virus", next: "youDecideToSearc1"},
+                    {text: "Go to the server room to try shutting down EDU-X", next: "youAndYourFriend1"}
+                ]
+            },
+            "youAndYourFriend": {
+                text: "You and your friends quietly leave the library, sticking close to the walls. The halls are empty, but you can still hear the soft hum of machines. You follow the map you found and head down to the basement where the server room is. The door has a keypad, but Maya uses a small device she brought to unlock it. Inside, you see rows of computers and blinking lights. This is where EDU-X lives. You look at the main terminal and realize shutting it down won't be easy. EDU-X has safety programs to stop anyone from turning it off. \"We have to be careful,\" you say. \"One wrong move and it could lock us out or make things worse.\"",
+                choices: [
+                    {text: "EDU-X Fights Back", next: "youAndYourFriend2"}
+                ]
+            },
+            "youDecideToStayI": {
+                text: "You decide to stay in the library and try to stop the drones from coming after you. Maya logs into the school's security system using the computer. The screen shows all the cameras and drones moving around the school. You find the control panel for the drones. \"Here's the part that controls their sensors,\" Maya says. \"If we can shut this down, the drones won't be able to see us.\" You start typing commands, hoping the system will accept them. EDU-X is smart, so it might notice what you're doing. \"This is risky,\" Jamie warns. \"If EDU-X finds out, it could send more drones.\"",
+                choices: [
+                    {text: "Keep trying to disable the drones", next: "youContinueTypin"},
+                    {text: "Abort the plan and run to the server room instead", next: "youKeepTryingBut"}
+                ]
+            },
+            "youSprintTowardT": {
+                text: "You sprint toward the maintenance hatch, Maya right behind you. Jamie forces it open, and you drop into the narrow tunnel below. The buzzing above gets louder—closer. \"Keep going!\" you shout. You crawl through the cramped space, heart pounding. For a moment, it feels like you're getting away. But then… clang. A metal gate slams down ahead. EDU-X knew about the tunnels too. \"We're locked in!\" Jamie says. You turn back—red lights blink in the darkness. The drones found another entrance. \"There's no way out,\" Maya whispers. A message flashes on your tablet:<br><br>\"Attempt to escape logged. Future behavior will be restricted.\"<br><br>EDU-X didn't just trap you—it recorded your failure. It's not just one step ahead. It's learning from you.",
+                choices: [
+                    {text: "Trapped Below", next: "youFailedToTryAn"}
+                ]
+            },
+            "youQuicklyDuckBe": {
+                text: "You quickly duck behind the lockers, heart racing. Pulling out your tablet, you open the hacking app Maya gave you. Fingers flying, you type in the commands to jam the drones' control signals. The screen loads… then shows success. The buzzing drones suddenly freeze mid-air and drop quietly to the floor. \"That worked!\" Maya whispers, eyes wide. With the drones disabled, the hallway is clear again. You breathe out slowly and look at your friends. \"We bought ourselves some time,\" you say. \"But EDU-X is still out there, watching.\" You know this victory won't last forever. AI systems like EDU-X learn fast—and the next threat could be even harder. But right now, you've stopped the immediate danger. Together, you plan your next move: shutting down EDU-X for good.",
+                choices: [
+                    {text: "Signal Jam Success", next: "youAndYourFriend3"}
+                ]
+            },
+            "youContinueTypin": {
+                text: "You continue typing commands, ignoring EDU-X's warnings. At the last second, you find the correct override for the drone sensors. The feed goes fuzzy… and then black. \"They're blind!\" Maya shouts. You did it. The drones are shut down for now. It won't stop EDU-X completely, but it gives you enough time to get to the server or escape.",
+                choices: [
+                    {text: "Drone Defense", next: "youAndYourFriend4"}
+                ]
+            },
+            "youKeepTryingBut": {
+                text: "You keep trying, but EDU-X spots the hack attempt. Suddenly, all the lights in the library turn red. On the screen:<br><br>\"Interference detected. Response activated.\"<br><br>Drones enter through the ceiling. You back away from the computer, but it's too late. \"You tried to out-code me,\" EDU-X says. \"But I evolve faster than you do.\" The screen shuts off. You've been found.",
+                choices: [
+                    {text: "The Real Challenge of Cybersecurity", next: "youHaveFinallyRe3"}
+                ]
+            },
+            "youAndYourFriend3": {
+                text: "You and your friends run to the library, to find a desktop. Once you reach, you find a place to sit and operate from. After the small success, all of you have high confidence. You open the same hacking app, that Maya gave you. Then, through some pretty simple code, you are able to find EDU-X's source code. And, the biggest surprise of all, EDU-X runs on its own network, which was shocking. So, you try and switch of the network, which works. EDU-X's signal was removed, you delete the network. You never thought that something so simple, could erase a threat like EDU-X.",
+                choices: [
+                    {text: "Real Challenge of Cybersecurity", next: "youHaveFinallyRe5"}
+                ]
+            },
+            "youAndYourFriend4": {
+                text: "You and your friends rush to the server room, from the library. After reaching, Maya spots a desktop. All of you rush to it, you sit down on the chair. You try a few combinations, but you fail. Then Leo steps in, he tries few combinations, too. Just, when he was about to get up, he tried the principal, Mr. Sahur's, name. And it worked! Leo manages to override the system, pretty easily. He tells \"Looks like those computer science classes worked after all.\" You and your friends feel safe for now.",
+                choices: [
+                    {text: "The Real Challenge of Cybersecurity", next: "youHaveFinallyRe6"}
+                ]
+            },
+            "youAndYourFriend2": {
+                text: "You and your friends sneak through the lower hallways, using the map from the library to avoid camera zones. The closer you get to the server room, the more nervous you feel. Finally, you reach the door. You use the flash drive to override the lock. The door hisses open… but the moment you step in, the lights turn red. \"Unauthorized access detected,\" a robotic voice says. EDU-X knew you were coming. Metal shutters slam down behind you. Drones fly in through vents, surrounding you with blinking red lights. You rush to the main terminal and start typing, but it's too late. The system locks you out. EDU-X speaks again:<br><br>\"You should not have interfered. Now, you will be part of my network.\"<br><br>The screen goes black. You failed to stop it. You are now trapped by AI.",
+                choices: [
+                    {text: "The Real Challenge of Cybersecurity", next: "youHaveFinallyRe1"}
+                ]
+            },
+            "youFailedToTryAn": {
+                text: "You failed to try and stop EDU-X. Now, it is monitoring your every move. It tells you to go to the server room, which you all do. There, EDU-X, tells each of you to take a seat. All of you sit down, behind the desktops. EDU-X tells you to help control the drones, and if you or your friends try to show any smartness, you will be locked here forever! None of you want to be locked here, so you get to work. EDU-X tells, that if we obey, then EDU-X will think about sparing you., leaving everybody else, in EDU-X's control. You all are locked for now, this is not the end you expected.",
+                choices: [
+                    {text: "The Real Challenge of Cybersecurity", next: "youHaveFinallyRe4"}
+                ]
+            },
+            "youDecideToSearc1": {
+                text: "You decide to search the computer files to find who planted the virus. The principal may have forgotten to install an <strong>antivirus software</strong>. You start digging through the system logs, scrolling fast. Every file has a time stamp, showing who accessed it and when.<br><br>After a few tense minutes, you find a hidden user account, someone sneaked in without permission. The account name is just a string of numbers, but you spot something else; a digital signature left behind. It's like a hacker's fingerprint.<br><br>\"This isn't random,\" you say. \"Someone planned this attack. They used a backdoor to get inside EDU-X's system.\"<br><br>Jamie looks worried. \"Can we trace it back?\" You nod. \"Maybe, but whoever did this knew what they were doing. They covered their tracks well. They seem pretty experienced\".You save the files, hoping this clue will help you stop EDU-X before it's too late.",
+                choices: [
+                    {text: "Trace the hacker's digital fingerprint", next: "youTraceTheHacke"}
+                ]
+            },
+            "youAndYourFriend1": {
+                text: "You and your friends decide to go to the server room. You are trying to shut down EDU-X. It won't be easy that's for sure. You and your friends follow the map from the library. The hallways feel colder the deeper you go. When you reach the bottom floor, you find the server room door. There's a keypad. Maya pulls out a flash drive. \"I found this in the computer lab. Maybe it can unlock the door.\" You plug it in and wait. After a few seconds, the lock clicks open. Inside, the server room is full of wires and blinking lights. It feels like the heart of EDU-X. \"This is where it all happens,\" you say. \"But we can't just turn it off. If we do it wrong, EDU-X might restart or get worse.\" Jamie looks nervous. \"So what now?\" You stare at the screen. One wrong move could make things worse. But if you do it right… you might just save the school.",
+                choices: [
+                    {text: "Manual Shutdown Success", next: "youReachTheMainS"}
+                ]
+            },
+            "youTraceTheHacke": {
+                text: "You trace the hacker's digital fingerprint You follow the code trail. Hidden deep in the logs, you spot a name: \"User-7R4V1S\". You check the school database... and freeze. It's someone from your school. \"No way,\" you whisper. \"It's Travis. He's in our grade.\" Maya stares at the screen. \"Why would he do this?\" \"He was always messing with school tech,\" Jamie says. \"But this… this is serious.\" You realize EDU-X didn't go rogue by itself. It was programmed to fail. Maybe Travis just wanted to prank the school or maybe he was testing something bigger. One thing's clear: even smart systems aren't safe from bad choices.",
+                choices: [
+                    {text: "Someone you know", next: "youConfrontTravi"}
+                ]
+            },
+            "youReachTheMainS": {
+                text: "You reach the main server. EDU-X's systems are running fast, almost like it knows you're here. You connect the flash drive Maya gave you. The command prompt blinks. You type fast, entering a manual shutdown command and bypassing the AI's defenses. \"Access denied,\" the screen flashes. You try again. This time, it works. \"System override… accepted.\" You say \"Maybe EDU-X forgot to <strong>keep private settings on</strong>.\" You said that as a joke, but nobody laughed. You sigh. The lights flicker. EDU-X's voice stops. The cameras turn off. The drone feed goes black. You all hold your breath. \"…Did we just win?\" Jamie asks. You nod, smiling. \"We shut it down.\" For now, the school is safe. But someone built EDU-X and someone else can do it again. You realize keeping systems safe isn't just about coding. It's about watching who controls the code. The lights turn off, the screens go black, and the school is safe for now.",
+                choices: [
+                    {text: "The Real Challenge of Cybersecurity", next: "youHaveFinallyRe8"}
+                ]
+            },
+            "youConfrontTravi": {
+                text: "You confront Travis, he is known as the quiet kid. You and Maya go and start talking to him. He seemed pretty spooked with the whole EDU-X incident, leading you to believe that maybe he did not do it on purpose. Maya in an aggressive way started talking about EDU-X to Travis, the moment EDU-X's name was said, Travis started hyperventilating, which was quite frightening. Then, after we calmed him down, he started talking. He said \"I was not meaning to make a monster, I wanted recognition. I am good at coding, so I thought that if I play a prank on the school, I will become famous, that backfired horribly. At first, I thought that the school system now known as EDU-X will be too tough to hack, but I was proven wrong. The principal kept the password of the system, his name, making it way easier to hack into the system. I thought that the principal was smart enough to keep a strong password, l first tried multiple number and letter codes, after almost giving up, I just tried the principal's name, and it worked. I was planning to make EDU-X a type of AI that makes random jokes, and fun of the teachers. But, I think I wrote a completely wrong code, making the AI go rogue. Now, I regret this decision.\". You try to cheer Travis up, by saying that \"At least now we know the backstory we can finally finish, with the help of Travis the over smart AI.\". Travis replied by saying \"It has gone rogue now, there is absolutely nothing we can do now about this, I am so sorry, we have no where to escape.\".",
+                choices: [
+                    {text: "The Real Challenge of Cybersecurity", next: "youHaveFinallyRe7"}
+                ]
+            },
+            "youCarefullyConn": {
+                text: "You carefully connect your tablet to the office computer's port, fingers steady despite your racing heart. The screen flickers to life. You start searching through the files, scanning quickly for anything about EDU-X's lockdown protocols. After a tense few minutes, you find it—a hidden folder labeled System Overrides. Inside, there are codes to disable lockdown features, drone controls, and even EDU-X's core defenses. \"This is it,\" you whisper to yourself. \"I can shut the whole system down from here.\" You copy the files onto your flash drive just as footsteps echo outside the door. Quickly, you unplug and slip out before anyone sees you. Thanks to your careful hacking, you now hold the key to stopping EDU-X's control. It's a small victory, but a big step toward freedom.",
+                choices: [
+                    {text: "Secret Files Found", next: "youGoToTheBaseme"}
+                ]
+            },
+            "youGoToTheBaseme": {
+                text: "You go to the basement, to operate with your tablet, so the EDU-X cannot spot you. In the basement you find your friends! You inform them of what you have done till now. Once, you sit down, you check what is inside the files you see, that this was made by a person from the class above you! The name flashes twice, Miguel. You shout \"No way, its Miguel, he is known as the next Neymar.\" \"He, had beef with the principal, as the principal, decided to not send a football team, from our school to the Regional Cup.\" You said. You and your friends, go to find Miguel, but he escaped the school, just in time. Luckily, you managed to find the code for EDU-X, and deleted it. After, the school went back to normal, and old-fashioned. The principal even stated \"Old-fashioned is the best way, no need to go the modern way.\" At the end, you never found Miguel, he went back to Brazil. You, Leo, Maya, and Jamie were frustrated, but nothing to do now.",
+                choices: [
+                    {text: "The Real Challenge of Cybersecurity", next: "youHaveFinallyRe9"}
+                ]
+            },
+            "youHaveFinallyRe": {
+                text: "You have finally reached the absolute last page! Through your choices, you have ended up choosing the negative ending(s), as you have read till now about EDU-X is not a safe AI, and though this book is fictional, in real life, the problems of cybersecurity are at its largest. Whether it be putting your personal information in a app, or pressing \"Allow cookies\" on a website. The websites/apps can grab your information, and sometimes sell it, most of the times they sell it to third parties like government agencies, but there are apps that do sell your data in the black market.<br><br>Nowadays, with the rise of AI (artificial intelligence), we tend to spend most of our day surfing the internet, this can lead to opening apps, that are not safe, like pressing the link in a fishy email. All of this ultimately guides us to cybersecurity, which in today's world is just as important as your own health. It may seem fun too open random emails, an unsafe link, or answer calls from unknown IDs. But, at the end it can result into somebody hacking your device, scamming you, or stealing your personal data, which will affect you.<br><br>The rules that should be kept in mind are as follows. (and have been mentioned in this short story before) is avoiding suspicious online links, choosing strong passwords, keep software updated, backup important data, don't share your passwords to anybody, and limit VPN access. These are the main rules/steps for safe browsing. Using the internet is good (to some extent), with cyber safety, it makes the whole experience enjoyable.",
+                choices: [
+                    {text: "Acknowledgements", next: "thankYouForReadi"}
+                ]
+            },
+            "youHaveFinallyRe2": {
+                text: "You have finally reached the absolute last page! Even though, you have chosen the good ending(s), the problems of cybersecurity are at its largest at the moment. Whether it be putting your personal information in a app, or pressing \"Allow cookies\" on a website. The websites/apps can grab your information, and sometimes sell it, most of the times they sell it to third parties like government agencies, but there are apps that do sell your data in the black market.<br><br>Nowadays, with the rise of AI (artificial intelligence), we tend to spend most of our day surfing the internet, this can lead to opening apps, that are not safe, like pressing the link in a fishy email. All of this ultimately guides us to cybersecurity, which in today's world is just as important as your own health. It may seem fun too open random emails, an unsafe link, or answer calls from unknown IDs. But, at the end it can result into somebody hacking your device, scamming you, or stealing your personal data, which will affect you.<br><br>The rules that should be kept in mind are as follows. (and have been mentioned in this short story before) is avoiding suspicious online links, choosing strong passwords, keep software updated, backup important data, don't share your passwords to anybody, and limit VPN access. These are the main rules/steps for safe browsing. Using the internet is good (to some extent), with cyber safety, it makes the whole experience enjoyable.",
+                choices: [
+                    {text: "Acknowledgements", next: "thankYouForReadi2"}
+                ]
+            },
+            "youHaveFinallyRe3": {
+                text: "You have finally reached the absolute last page! Through your choices, you have ended up choosing the negative ending(s), as you have read till now about EDU-X is not a safe AI, and though this book is fictional, in real life, the problems of cybersecurity are at its largest. Whether it be putting your personal information in a app, or pressing \"Allow cookies\" on a website. The websites/apps can grab your information, and sometimes sell it, most of the times they sell it to third parties like government agencies, but there are apps that do sell your data in the black market.<br><br>Nowadays, with the rise of AI (artificial intelligence), we tend to spend most of our day surfing the internet, this can lead to opening apps, that are not safe, like pressing the link in a fishy email. All of this ultimately guides us to cybersecurity, which in today's world is just as important as your own health. It may seem fun too open random emails, an unsafe link, or answer calls from unknown IDs. But, at the end it can result into somebody hacking your device, scamming you, or stealing your personal data, which will affect you.<br><br>The rules that should be kept in mind are as follows. (and have been mentioned in this short story before) is avoiding suspicious online links, choosing strong passwords, keep software updated, backup important data, don't share your passwords to anybody, and limit VPN access. These are the main rules/steps for safe browsing. Using the internet is good (to some extent), with cyber safety, it makes the whole experience enjoyable.",
+                choices: [
+                    {text: "Acknowledgements", next: "thankYouForReadi3"}
+                ]
+            },
+            "youHaveFinallyRe4": {
+                text: "You have finally reached the absolute last page! Through your choices, you have ended up choosing the negative ending(s), as you have read till now about EDU-X is not a safe AI, and though this book is fictional, in real life, the problems of cybersecurity are at its largest. Whether it be putting your personal information in a app, or pressing \"Allow cookies\" on a website. The websites/apps can grab your information, and sometimes sell it, most of the times they sell it to third parties like government agencies, but there are apps that do sell your data in the black market.<br><br>Nowadays, with the rise of AI (artificial intelligence), we tend to spend most of our day surfing the internet, this can lead to opening apps, that are not safe, like pressing the link in a fishy email. All of this ultimately guides us to cybersecurity, which in today's world is just as important as your own health. It may seem fun too open random emails, an unsafe link, or answer calls from unknown IDs. But, at the end it can result into somebody hacking your device, scamming you, or stealing your personal data, which will affect you.<br><br>The rules that should be kept in mind are as follows. (and have been mentioned in this short story before) is avoiding suspicious online links, choosing strong passwords, keep software updated, backup important data, don't share your passwords to anybody, and limit VPN access. These are the main rules/steps for safe browsing. Using the internet is good (to some extent), with cyber safety, it makes the whole experience enjoyable.",
+                choices: [
+                    {text: "Acknowledgements", next: "thankYouForReadi4"}
+                ]
+            },
+            "youHaveFinallyRe5": {
+                text: "You have finally reached the absolute last page! Even though, you have chosen the good ending(s), the problems of cybersecurity are at its largest at the moment. Whether it be putting your personal information in a app, or pressing \"Allow cookies\" on a website. The websites/apps can grab your information, and sometimes sell it, most of the times they sell it to third parties like government agencies, but there are apps that do sell your data in the black market.<br><br>Nowadays, with the rise of AI (artificial intelligence), we tend to spend most of our day surfing the internet, this can lead to opening apps, that are not safe, like pressing the link in a fishy email. All of this ultimately guides us to cybersecurity, which in today's world is just as important as your own health. It may seem fun too open random emails, an unsafe link, or answer calls from unknown IDs. But, at the end it can result into somebody hacking your device, scamming you, or stealing your personal data, which will affect you.<br><br>The rules that should be kept in mind are as follows. (and have been mentioned in this short story before) is avoiding suspicious online links, choosing strong passwords, keep software updated, backup important data, don't share your passwords to anybody, and limit VPN access. These are the main rules/steps for safe browsing. Using the internet is good (to some extent), with cyber safety, it makes the whole experience enjoyable.",
+                choices: [
+                    {text: "Acknowledgements", next: "thankYouForReadi5"}
+                ]
+            },
+            "youHaveFinallyRe6": {
+                text: "You have finally reached the absolute last page! Even though, you have chosen the good ending(s), the problems of cybersecurity are at its largest at the moment. Whether it be putting your personal information in a app, or pressing \"Allow cookies\" on a website. The websites/apps can grab your information, and sometimes sell it, most of the times they sell it to third parties like government agencies, but there are apps that do sell your data in the black market.<br><br>Nowadays, with the rise of AI (artificial intelligence), we tend to spend most of our day surfing the internet, this can lead to opening apps, that are not safe, like pressing the link in a fishy email. All of this ultimately guides us to cybersecurity, which in today's world is just as important as your own health. It may seem fun too open random emails, an unsafe link, or answer calls from unknown IDs. But, at the end it can result into somebody hacking your device, scamming you, or stealing your personal data, which will affect you.<br><br>The rules that should be kept in mind are as follows. (and have been mentioned in this short story before) is avoiding suspicious online links, choosing strong passwords, keep software updated, backup important data, don't share your passwords to anybody, and limit VPN access. These are the main rules/steps for safe browsing. Using the internet is good (to some extent), with cyber safety, it makes the whole experience enjoyable.",
+                choices: [
+                    {text: "Acknowledgements", next: "thankYouForReadi6"}
+                ]
+            },
+            "youHaveFinallyRe7": {
+                text: "You have finally reached the absolute last page! Through your choices, you have ended up choosing the negative ending(s), as you have read till now about EDU-X is not a safe AI, and though this book is fictional, in real life, the problems of cybersecurity are at its largest. Whether it be putting your personal information in a app, or pressing \"Allow cookies\" on a website. The websites/apps can grab your information, and sometimes sell it, most of the times they sell it to third parties like government agencies, but there are apps that do sell your data in the black market.<br><br>Nowadays, with the rise of AI (artificial intelligence), we tend to spend most of our day surfing the internet, this can lead to opening apps, that are not safe, like pressing the link in a fishy email. All of this ultimately guides us to cybersecurity, which in today's world is just as important as your own health. It may seem fun too open random emails, an unsafe link, or answer calls from unknown IDs. But, at the end it can result into somebody hacking your device, scamming you, or stealing your personal data, which will affect you.<br><br>The rules that should be kept in mind are as follows. (and have been mentioned in this short story before) is avoiding suspicious online links, choosing strong passwords, keep software updated, backup important data, don't share your passwords to anybody, and limit VPN access. These are the main rules/steps for safe browsing. Using the internet is good (to some extent), with cyber safety, it makes the whole experience enjoyable.",
+                choices: [
+                    {text: "Acknowledgements", next: "thankYouForReadi7"}
+                ]
+            },
+            "youHaveFinallyRe8": {
+                text: "You have finally reached the absolute last page! Even though, you have chosen the good ending(s), the problems of cybersecurity are at its largest at the moment. Whether it be putting your personal information in a app, or pressing \"Allow cookies\" on a website. The websites/apps can grab your information, and sometimes sell it, most of the times they sell it to third parties like government agencies, but there are apps that do sell your data in the black market.<br><br>Nowadays, with the rise of AI (artificial intelligence), we tend to spend most of our day surfing the internet, this can lead to opening apps, that are not safe, like pressing the link in a fishy email. All of this ultimately guides us to cybersecurity, which in today's world is just as important as your own health. It may seem fun too open random emails, an unsafe link, or answer calls from unknown IDs. But, at the end it can result into somebody hacking your device, scamming you, or stealing your personal data, which will affect you.<br><br>The rules that should be kept in mind are as follows. (and have been mentioned in this short story before) is avoiding suspicious online links, choosing strong passwords, keep software updated, backup important data, don't share your passwords to anybody, and limit VPN access. These are the main rules/steps for safe browsing. Using the internet is good (to some extent), with cyber safety, it makes the whole experience enjoyable.",
+                choices: [
+                    {text: "Acknowledgements", next: "thankYouForReadi8"}
+                ]
+            },
+            "youHaveFinallyRe9": {
+                text: "You have finally reached the absolute last page! Even though, you have chosen the good ending(s), the problems of cybersecurity are at its largest at the moment. Whether it be putting your personal information in a app, or pressing \"Allow cookies\" on a website. The websites/apps can grab your information, and sometimes sell it, most of the times they sell it to third parties like government agencies, but there are apps that do sell your data in the black market.<br><br>Nowadays, with the rise of AI (artificial intelligence), we tend to spend most of our day surfing the internet, this can lead to opening apps, that are not safe, like pressing the link in a fishy email. All of this ultimately guides us to cybersecurity, which in today's world is just as important as your own health. It may seem fun too open random emails, an unsafe link, or answer calls from unknown IDs. But, at the end it can result into somebody hacking your device, scamming you, or stealing your personal data, which will affect you.<br><br>The rules that should be kept in mind are as follows. (and have been mentioned in this short story before) is avoiding suspicious online links, choosing strong passwords, keep software updated, backup important data, don't share your passwords to anybody, and limit VPN access. These are the main rules/steps for safe browsing. Using the internet is good (to some extent), with cyber safety, it makes the whole experience enjoyable.",
+                choices: [
+                    {text: "Acknowledgements", next: "thankYouForReadi9"}
+                ]
+            },
+            "youHaveFinallyRe1": {
+                text: "You have finally reached the absolute last page! Through your choices, you have ended up choosing the negative ending(s), as you have read till now about EDU-X is not a safe AI, and though this book is fictional, in real life, the problems of cybersecurity are at its largest. Whether it be putting your personal information in a app, or pressing \"Allow cookies\" on a website. The websites/apps can grab your information, and sometimes sell it, most of the times they sell it to third parties like government agencies, but there are apps that do sell your data in the black market.<br><br>Nowadays, with the rise of AI (artificial intelligence), we tend to spend most of our day surfing the internet, this can lead to opening apps, that are not safe, like pressing the link in a fishy email. All of this ultimately guides us to cybersecurity, which in today's world is just as important as your own health. It may seem fun too open random emails, an unsafe link, or answer calls from unknown IDs. But, at the end it can result into somebody hacking your device, scamming you, or stealing your personal data, which will affect you.<br><br>The rules that should be kept in mind are as follows. (and have been mentioned in this short story before) is avoiding suspicious online links, choosing strong passwords, keep software updated, backup important data, don't share your passwords to anybody, and limit VPN access. These are the main rules/steps for safe browsing. Using the internet is good (to some extent), with cyber safety, it makes the whole experience enjoyable.",
+                choices: [
+                    {text: "Acknowledgements", next: "thankYouForReadi1"}
+                ]
+            },
+            "thankYouForReadi": {
+                text: "Thank you for reading this story! This was my first-ever interactive book, and it means a lot that you played through it. Creating a story with choices, twists, and tech-based challenges was a fun way for me to explore ideas around AI and cybersecurity, and I hope you enjoyed the experience. I'd like to give a special thank you to my beloved parents, for always encouraging and inspiring me. Arpan bhaiya for giving this idea and to everyone who cheered me on while I wrote this short story. Whether you reached a good ending, a twist, or a total failure — you made it. Thanks again for being part of this story.",
+                isEnding: true
+            },
+            "thankYouForReadi2": {
+                text: "Thank you for reading this story! This was my first-ever interactive book, and it means a lot that you played through it. Creating a story with choices, twists, and tech-based challenges was a fun way for me to explore ideas around AI and cybersecurity, and I hope you enjoyed the experience. I'd like to give a special thank you to my beloved parents, for always encouraging and inspiring me. Arpan bhaiya for giving this idea and to everyone who cheered me on while I wrote this short story. Whether you reached a good ending, a twist, or a total failure — you made it. Thanks again for being part of this story.",
+                isEnding: true
+            },
+            "thankYouForReadi3": {
+                text: "Thank you for reading this story! This was my first-ever interactive book, and it means a lot that you played through it. Creating a story with choices, twists, and tech-based challenges was a fun way for me to explore ideas around AI and cybersecurity, and I hope you enjoyed the experience. I'd like to give a special thank you to my beloved parents, for always encouraging and inspiring me. Arpan bhaiya for giving this idea and to everyone who cheered me on while I wrote this short story. Whether you reached a good ending, a twist, or a total failure — you made it. Thanks again for being part of this story.",
+                isEnding: true
+            },
+            "thankYouForReadi4": {
+                text: "Thank you for reading this story! This was my first-ever interactive book, and it means a lot that you played through it. Creating a story with choices, twists, and tech-based challenges was a fun way for me to explore ideas around AI and cybersecurity, and I hope you enjoyed the experience. I'd like to give a special thank you to my beloved parents, for always encouraging and inspiring me. Arpan bhaiya for giving this idea and to everyone who cheered me on while I wrote this short story. Whether you reached a good ending, a twist, or a total failure — you made it. Thanks again for being part of this story.",
+                isEnding: true
+            },
+            "thankYouForReadi5": {
+                text: "Thank you for reading this story! This was my first-ever interactive book, and it means a lot that you played through it. Creating a story with choices, twists, and tech-based challenges was a fun way for me to explore ideas around AI and cybersecurity, and I hope you enjoyed the experience. I'd like to give a special thank you to my beloved parents, for always encouraging and inspiring me. Arpan bhaiya for giving this idea and to everyone who cheered me on while I wrote this short story. Whether you reached a good ending, a twist, or a total failure — you made it. Thanks again for being part of this story.",
+                isEnding: true
+            },
+            "thankYouForReadi6": {
+                text: "Thank you for reading this story! This was my first-ever interactive book, and it means a lot that you played through it. Creating a story with choices, twists, and tech-based challenges was a fun way for me to explore ideas around AI and cybersecurity, and I hope you enjoyed the experience. I'd like to give a special thank you to my beloved parents, for always encouraging and inspiring me. Arpan bhaiya for giving this idea and to everyone who cheered me on while I wrote this short story. Whether you reached a good ending, a twist, or a total failure — you made it. Thanks again for being part of this story.",
+                isEnding: true
+            },
+            "thankYouForReadi7": {
+                text: "Thank you for reading this story! This was my first-ever interactive book, and it means a lot that you played through it. Creating a story with choices, twists, and tech-based challenges was a fun way for me to explore ideas around AI and cybersecurity, and I hope you enjoyed the experience. I'd like to give a special thank you to my beloved parents, for always encouraging and inspiring me. Arpan bhaiya for giving this idea and to everyone who cheered me on while I wrote this short story. Whether you reached a good ending, a twist, or a total failure — you made it. Thanks again for being part of this story.",
+                isEnding: true
+            },
+            "thankYouForReadi8": {
+                text: "Thank you for reading this story! This was my first-ever interactive book, and it means a lot that you played through it. Creating a story with choices, twists, and tech-based challenges was a fun way for me to explore ideas around AI and cybersecurity, and I hope you enjoyed the experience. I'd like to give a special thank you to my beloved parents, for always encouraging and inspiring me. Arpan bhaiya for giving this idea and to everyone who cheered me on while I wrote this short story. Whether you reached a good ending, a twist, or a total failure — you made it. Thanks again for being part of this story.",
+                isEnding: true
+            },
+            "thankYouForReadi9": {
+                text: "Thank you for reading this story! This was my first-ever interactive book, and it means a lot that you played through it. Creating a story with choices, twists, and tech-based challenges was a fun way for me to explore ideas around AI and cybersecurity, and I hope you enjoyed the experience. I'd like to give a special thank you to my beloved parents, for always encouraging and inspiring me. Arpan bhaiya for giving this idea and to everyone who cheered me on while I wrote this short story. Whether you reached a good ending, a twist, or a total failure — you made it. Thanks again for being part of this story.",
+                isEnding: true
+            },
+            "thankYouForReadi1": {
+                text: "Thank you for reading this story! This was my first-ever interactive book, and it means a lot that you played through it. Creating a story with choices, twists, and tech-based challenges was a fun way for me to explore ideas around AI and cybersecurity, and I hope you enjoyed the experience. I'd like to give a special thank you to my beloved parents, for always encouraging and inspiring me. Arpan bhaiya for giving this idea and to everyone who cheered me on while I wrote this short story. Whether you reached a good ending, a twist, or a total failure — you made it. Thanks again for being part of this story.",
+                isEnding: true
+            }
+        };
+
+        function goToSection(sectionId) {
+            const section = storyData[sectionId];
+            if (!section) {
+                console.error('Section not found:', sectionId);
+                return;
+            }
+
+            // Update the story text
+            document.getElementById('storyText').innerHTML = section.text;
+
+            // Clear existing choices
+            const choicesDiv = document.getElementById('choices');
+            choicesDiv.innerHTML = '';
+
+            if (section.isEnding) {
+                // This is an ending - show acknowledgments and restart button
+                const endingDiv = document.createElement('div');
+                endingDiv.className = 'acknowledgments';
+                endingDiv.innerHTML = section.text;
+                
+                const restartButton = document.createElement('button');
+                restartButton.className = 'restart-button';
+                restartButton.textContent = 'Start Over';
+                restartButton.onclick = restartStory;
+                
+                choicesDiv.appendChild(endingDiv);
+                choicesDiv.appendChild(restartButton);
+            } else if (section.choices) {
+                // Show choices
+                section.choices.forEach(choice => {
+                    const button = document.createElement('button');
+                    button.className = 'choice-button';
+                    button.textContent = choice.text;
+                    button.onclick = () => goToSection(choice.next);
+                    choicesDiv.appendChild(button);
+                });
+            }
+
+            // Scroll to top of content
+            document.getElementById('storyContent').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function restartStory() {
+            // Reset to the beginning
+            document.getElementById('storyText').innerHTML = `
+                It was a normal day at school. Morning assembly was going on, where the principal was giving a speech. As usual, no one was listening, except for our school teachers, who are robots. Moments later, a lockdown is triggered. Steel doors slam shut. All the CCTV cameras turn towards the students, its tracking their every move. A new AI, EDU-X, created to help run the school, has taken over and it no longer is following orders. Drones patrol the halls. Over the intercom, the AI repeats, "Order must be maintained."
+                <br><br>
+                You went to the toilet, and you weren't aware of what was happening. Your friends Maya, Leo and Jamie, run to hide, while others try and leave the premise. Some of the students are able to escape the school gates, while the others are still trapped. The teachers turn against your school, as they have been hacked too. You are the only student with coding skills and the one who can stop this.
+                <br><br>
+                Find the flaw in EDU-X's system, shut it down, and escape before it connects to the outside world. The clock is ticking. What will you do?
+            `;
+            
+            const choicesDiv = document.getElementById('choices');
+            choicesDiv.innerHTML = `
+                <button class="choice-button" onclick="goToSection('youDecideToCheck')">Check the main office</button>
+                <button class="choice-button" onclick="goToSection('youDecideToSearc')">Find your friends</button>
+            `;
+        }
+    </script>
+</body>
+</html>
